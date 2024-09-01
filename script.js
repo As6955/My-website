@@ -3,7 +3,7 @@ let displayMode = "weeksDays";
 let autoChangeInterval;
 let mouseHeartsEnabled = false;
 let currentHeartColor = 'red';
-const brightnessLevels = [0.1, 0.3, 0.5, 0.7, 0.9];
+const brightnessLevels = [0.0, 0.3, 0.5, 0.7, 0.9];
 let currentBrightnessIndex = 1;
 let heartIntervalTime = 5000; // ברירת מחדל של 5 שניות
 let heartQuantity = 1; // כמות הלבבות בכל יציאה
