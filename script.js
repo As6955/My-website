@@ -195,29 +195,3 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// הוספת כפתורי ניווט לממשק המשתמש
-const navigationArrows = document.createElement('div');
-navigationArrows.classList.add('navigation-arrows');
-navigationArrows.innerHTML = `
-    <span class="arrow" id="prevImage">&#10094;</span>
-    <span class="arrow" id="nextImage">&#10095;</span>
-`;
-document.body.appendChild(navigationArrows);
-document.getElementById('prevImage').addEventListener('click', (e) => {
-    e.stopPropagation(); // מניעת התפשטות האירוע
-    changeBackgroundImage(1); // תחליף לרקע הקודם
-});
-
-document.getElementById('nextImage').addEventListener('click', (e) => {
-    e.stopPropagation(); // מניעת התפשטות האירוע
-    changeBackgroundImage(-1); // תחליף לרקע הבא
-});
-
-document.body.addEventListener('click', (e) => {
-    if (!document.getElementById('menu').contains(e.target) && !document.getElementById('openMenuIcon').contains(e.target)) {
-        changeBackgroundImage(1);
-        document.getElementById('menu').style.display = 'none';
-    } else if (e.target.id === 'openMenuIcon') {
-        document.getElementById('menu').style.display = 'block';
-    }
-});
