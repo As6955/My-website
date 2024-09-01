@@ -189,9 +189,9 @@ document.body.addEventListener('mousemove', (e) => {
 // הוספת פונקציונליות ניווט מקשי חיצים
 document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowLeft') {
-        changeBackgroundImage(1); // שינוי תמונה קודמת
+        changeBackgroundImage(-1); // שינוי תמונה קודמת
     } else if (e.key === 'ArrowRight') {
-        changeBackgroundImage(-1); // שינוי תמונה הבאה
+        changeBackgroundImage(1); // שינוי תמונה הבאה
     }
 });
 
