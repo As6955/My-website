@@ -1,4 +1,4 @@
-﻿const targetDate = new Date(2024, 10, 6, 0, 0, 0); // November 6, 2024
+const targetDate = new Date(2024, 10, 6, 0, 0, 0); // November 6, 2024
 let displayMode = "weeksDays";
 let autoChangeInterval;
 let mouseHeartsEnabled = false;
@@ -65,7 +65,6 @@ function changeBackgroundImage(direction = 1) {
         document.body.style.backgroundImage = `url('${images[0]}')`;
     };
 }
-
 
 document.getElementById('toggleDisplayMode').addEventListener('click', () => {
     displayMode = displayMode === "weeksDays" ? "days" : "weeksDays";
@@ -169,29 +168,23 @@ function createHearts() {
 
 let heartInterval = setInterval(createHearts, heartIntervalTime);
 
-document.body.addEventListener('mousemove', (e) => {
-    if (mouseHeartsEnabled) {
-        for (let i = 0; i < heartQuantity; i++) {
-            const heart = document.createElement('div');
-            heart.classList.add('heart');
-            heart.style.left = `${e.clientX}px`;
-            heart.style.top = `${e.clientY}px`;
-            heart.style.backgroundColor = currentHeartColor || 'red';
-            document.body.appendChild(heart);
-
-            setTimeout(() => {
-                heart.remove();
-            }, 9000);
+// הוספת פונקציונליות ניווט מקשי חיצים + רווח ואנטר
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') {
+        changeBackgroundImage(-1); // שינוי לתמונה הקודמת
+    } else if (e.key === 'ArrowRight') {
+        changeBackgroundImage(1); // שינוי לתמונה הבאה
+    } else if (e.key === 'Enter') {
+        changeBackgroundImage(1); // החלפת תמונה לתמונה הבאה בלחיצה על אנטר
+    } else if (e.key === ' ') { // מקש רווח להתחלה/הפסקת החלפת תמונות אוטומטית
+        e.preventDefault(); // למנוע התנהגות ברירת מחדל של גלילה
+        if (autoChangeInterval) {
+            clearInterval(autoChangeInterval);
+            autoChangeInterval = null;
+            document.getElementById('toggleAutoChange').textContent = "התחל החלפת תמונות אוטומטית";
+        } else {
+            autoChangeInterval = setInterval(() => changeBackgroundImage(1), 2000); // החלפה כל 2 שניות
+            document.getElementById('toggleAutoChange').textContent = "הפסק החלפת תמונות אוטומטית";
         }
     }
 });
-
-// הוספת פונקציונליות ניווט מקשי חיצים
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowLeft') {
-        changeBackgroundImage(1); // שינוי תמונה קודמת
-    } else if (e.key === 'ArrowRight') {
-        changeBackgroundImage(-1); // שינוי תמונה הבאה
-    }
-});
-
