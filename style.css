@@ -141,7 +141,7 @@ h1 {
     left: 25px;
 }
 
-/* ςγλεο ΰπιξφιδ μαιφες αφεψδ ημχδ */
+/* Γ²Γ£Γ«Γ¥Γ― Γ Γ°Γ©Γ®Γ¶Γ©Γ¤ Γ¬Γ΅Γ©Γ¶Γ¥Γ² Γ΅Γ¶Γ¥ΓΈΓ¤ Γ§Γ¬Γ·Γ¤ */
 @keyframes heartFloat {
     0% {
         transform: scale(0.5) translateY(0) rotate(-45deg);
@@ -152,31 +152,3 @@ h1 {
         opacity: 0;
     }
 }
-.navigation-arrows {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 20px;
-    z-index: 3;
-}
-
-.arrow {
-    font-size: 2rem;
-    color: white;
-    cursor: pointer;
-    transition: transform 0.3s ease, color 0.3s ease;
-    pointer-events: all;
-    z-index: 1000;
-    background-color: rgba(0, 0, 0, 0.5); /* δερτϊ ψχς λγι μδαθιη ωδηιφιν μΰ ξερϊψιν */
-    padding: 10px;
-    border-radius: 50%;
-}
-
-.arrow:hover {
-    transform: scale(1.2);
-    color: #FFD700;
-}
-
-
