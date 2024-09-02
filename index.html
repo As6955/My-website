@@ -109,131 +109,99 @@
         <button id="submitIdea">שלח רעיון</button>
     </div>
 
-    <!-- Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-database.js"></script>
-    <script>
-      // הגדרות Firebase
-      const firebaseConfig = {
-        apiKey: "AIzaSyArRmykK3Vy_qhg811ZV8En3aNnEq9siFY",
-        authDomain: "my-website-wedding.firebaseapp.com",
-        projectId: "my-website-wedding",
-        storageBucket: "my-website-wedding.appspot.com",
-        messagingSenderId: "40275814976",
-        appId: "1:40275814976:web:a973218ec4072f21978da5"
-      };
-
-      // אתחול Firebase
-      const app = firebase.initializeApp(firebaseConfig);
-      const db = firebase.database();
-
-      // פונקציות לשמירה וטעינת נתונים
-      function saveIdea(idea) {
-          db.ref('ideas/').set({
-              text: idea
-          });
-      }
-
-      function loadIdea() {
-          db.ref('ideas/').get().then((snapshot) => {
-              if (snapshot.exists()) {
-                  document.getElementById('ideaInput').value = snapshot.val().text;
-              }
-          });
-      }
-
-      // קריאה לטעינת הרעיון כאשר הדף נטען
-      loadIdea();
-
-      document.getElementById('submitIdea').addEventListener('click', function() {
-          const idea = document.getElementById('ideaInput').value;
-          if (idea) {
-              saveIdea(idea);
-              alert(`הרעיון שלך נשמר: ${idea}`);
-          } else {
-              alert('אנא הזן רעיון לפני שליחתו.');
-          }
-      });
-    </script>
-
+    <!-- סקריפטים -->
     <script src="background-images.js"></script>
     <script src="script.js"></script>
-    
-    <!-- הוספת הקוד לטיפול בקוד הסודי ולהצגת התפריטים -->
+
     <script>
-    let startTime = new Date();
-    let inputSequence = "";
+    document.addEventListener('DOMContentLoaded', function () { 
+        // תוודא שהקוד נטען אחרי ה-HTML
+        let startTime = new Date();
+        let inputSequence = "";
 
-    document.addEventListener('keydown', function(event) {
-        let currentTime = new Date();
-        let timeDiff = (currentTime - startTime) / 1000;
+        document.addEventListener('keydown', function(event) {
+            let currentTime = new Date();
+            let timeDiff = (currentTime - startTime) / 1000;
 
-        if (timeDiff <= 60) { 
-            inputSequence += event.key;
+            if (timeDiff <= 60) { 
+                inputSequence += event.key;
 
-            if (inputSequence.includes("אריגיל")) {
-                // הצגת הסמל "❤️"
-                document.getElementById('secretHeart').style.display = 'block';
+                if (inputSequence.includes("אביגיל")) {
+                    // הצגת הסמל "❤️"
+                    document.getElementById('secretHeart').style.display = 'block';
 
-                // הצגת סמל התפריט החדש עם אנימציה
-                const secretMenuIcon = document.getElementById('openSecretMenuIcon');
-                secretMenuIcon.style.display = 'block';
-                secretMenuIcon.classList.add('pulsate');
+                    // הצגת סמל התפריט החדש עם אנימציה
+                    const secretMenuIcon = document.getElementById('openSecretMenuIcon');
+                    secretMenuIcon.style.display = 'block';
+                    secretMenuIcon.classList.add('pulsate');
 
-                // הסתרת הסמל אחרי כמה שניות
-                setTimeout(function() {
-                    document.getElementById('secretHeart').style.display = 'none';
-                }, 3000);
+                    // הסתרת הסמל אחרי כמה שניות
+                    setTimeout(function() {
+                        document.getElementById('secretHeart').style.display = 'none';
+                    }, 3000);
 
-                // הפעלת סקריפט הלבבות פעם אחת
-                createHearts();
+                    // הפעלת סקריפט הלבבות פעם אחת
+                    createHearts();
+                }
+            }
+        });
+
+        // פתיחת התפריט המקורי כאשר העכבר עובר על הסמל
+        document.getElementById('openMenuIcon').addEventListener('mouseenter', function() {
+            const menu = document.getElementById('menu');
+            menu.style.display = 'block';
+        });
+
+        // סגירת התפריט המקורי כאשר העכבר יוצא מגבולות התפריט
+        document.getElementById('menu').addEventListener('mouseleave', function() {
+            document.getElementById('menu').style.display = 'none';
+        });
+
+        // פתיחת התפריט החדש כאשר העכבר עובר על הסמל
+        document.getElementById('openSecretMenuIcon').addEventListener('mouseenter', function() {
+            const secretMenu = document.getElementById('secretMenu');
+            secretMenu.style.display = 'block';
+            // הסרת האנימציה כשהתפריט נפתח
+            this.classList.remove('pulsate');
+        });
+
+        // סגירת התפריט החדש כאשר העכבר יוצא מגבולות התפריט
+        document.getElementById('secretMenu').addEventListener('mouseleave', function() {
+            document.getElementById('secretMenu').style.display = 'none';
+        });
+
+        // פתיחת תיבת הקלט לרעיון
+        document.getElementById('openIdeaInput').addEventListener('click', function() {
+            document.getElementById('ideaInputContainer').style.display = 'block';
+        });
+
+        // שליחת הרעיון
+        document.getElementById('submitIdea').addEventListener('click', function() {
+            const idea = document.getElementById('ideaInput').value;
+            if (idea) {
+                alert(`הרעיון שלך נשלח: ${idea}`);
+                document.getElementById('ideaInputContainer').style.display = 'none';
+                document.getElementById('ideaInput').value = ''; // איפוס התיבה לאחר השליחה
+            } else {
+                alert('אנא הזן רעיון לפני שליחתו.');
+            }
+        });
+
+        function createHearts() {
+            for (let i = 0; i < 30; i++) {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.style.left = `${Math.random() * 100}vw`;
+                heart.style.top = `${Math.random() * 100}vh`;
+                heart.style.backgroundColor = 'red'; // צבע ברירת מחדל של הלבבות
+                document.body.appendChild(heart);
+
+                setTimeout(() => {
+                    heart.remove();
+                }, 5000); // הלבבות ייעלמו אחרי 5 שניות
             }
         }
     });
-
-    // פתיחת התפריט המקורי כאשר העכבר עובר על הסמל
-    document.getElementById('openMenuIcon').addEventListener('mouseenter', function() {
-        const menu = document.getElementById('menu');
-        menu.style.display = 'block';
-    });
-
-    // סגירת התפריט המקורי כאשר העכבר יוצא מגבולות התפריט
-    document.getElementById('menu').addEventListener('mouseleave', function() {
-        document.getElementById('menu').style.display = 'none';
-    });
-
-    // פתיחת התפריט החדש כאשר העכבר עובר על הסמל
-    document.getElementById('openSecretMenuIcon').addEventListener('mouseenter', function() {
-        const secretMenu = document.getElementById('secretMenu');
-        secretMenu.style.display = 'block';
-        // הסרת האנימציה כשהתפריט נפתח
-        this.classList.remove('pulsate');
-    });
-
-    // סגירת התפריט החדש כאשר העכבר יוצא מגבולות התפריט
-    document.getElementById('secretMenu').addEventListener('mouseleave', function() {
-        document.getElementById('secretMenu').style.display = 'none';
-    });
-
-    // פתיחת תיבת הקלט לרעיון
-    document.getElementById('openIdeaInput').addEventListener('click', function() {
-        document.getElementById('ideaInputContainer').style.display = 'block';
-    });
-
-    function createHearts() {
-        for (let i = 0; i < 30; i++) {
-            const heart = document.createElement('div');
-            heart.classList.add('heart');
-            heart.style.left = `${Math.random() * 100}vw`;
-            heart.style.top = `${Math.random() * 100}vh`;
-            heart.style.backgroundColor = 'red'; // צבע ברירת מחדל של הלבבות
-            document.body.appendChild(heart);
-
-            setTimeout(() => {
-                heart.remove();
-            }, 5000); // הלבבות ייעלמו אחרי 5 שניות
-        }
-    }
     </script>
 </body>
 </html>
