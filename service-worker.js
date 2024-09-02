@@ -5,9 +5,13 @@ const urlsToCache = [
   '/style.css',
   '/script.js',
   '/background-images.js',
-  // λΰο πιϊο μδερισ χαφιν περτιν ωΰϊδ ψεφδ μωξεψ αξθξεο
-  '/1.jpg', // ΰν ιω φεψκ μδερισ ΰϊ λμ δϊξεπεϊ αΰετο ιγπι, ΰτωψ μδωϊξω αμεμΰδ μιφιψϊ ψωιξδ
+  // Χ›ΧΧ Χ Χ™ΧªΧ ΧΧ”Χ•Χ΅Χ™Χ£ Χ§Χ‘Χ¦Χ™Χ Χ Χ•Χ΅Χ¤Χ™Χ Χ©Χ‘Χ¨Χ¦Χ•Χ Χ ΧΧ©ΧΧ•Χ¨ Χ‘ΧΧΧΧ•Χ
 ];
+
+// Χ”Χ•Χ΅Χ¤Χª Χ”ΧªΧΧ•Χ Χ•Χª ΧΧΧΆΧ¨Χ Χ”ΧΧΧΧ•Χ
+for (let i = 1; i <= 500; i++) {
+    urlsToCache.push(`/${i}.jpg`);
+}
 
 self.addEventListener('install', event => {
   event.waitUntil(
@@ -24,9 +28,9 @@ self.addEventListener('fetch', event => {
     caches.match(event.request)
       .then(response => {
         if (response) {
-          return response; // δχεαυ πξφΰ αξθξεο, πωϊξω αε
+          return response; // Χ”Χ§Χ•Χ‘Χ¥ Χ ΧΧ¦Χ Χ‘ΧΧΧΧ•Χ, Χ Χ©ΧªΧΧ© Χ‘Χ•
         }
-        return fetch(event.request); // ΰν δχεαυ μΰ πξφΰ αξθξεο, πεψιγ ΰεϊε ξδψωϊ
+        return fetch(event.request); // ΧΧ Χ”Χ§Χ•Χ‘Χ¥ ΧΧ Χ ΧΧ¦Χ Χ‘ΧΧΧΧ•Χ, Χ Χ•Χ¨Χ™Χ“ ΧΧ•ΧªΧ• ΧΧ”Χ¨Χ©Χª
       })
   );
 });
