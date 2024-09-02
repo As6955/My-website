@@ -30,20 +30,59 @@
         <a href="#" id="toggleFullScreen">מסך מלא</a>
         <a href="#" id="uploadBackground">העלה תמונת רקע</a>
         <a href="mailto:a0527121640@gmail.com?subject=משוב&body=שלום, אשמח לשלוח משוב.">צור קשר</a>
+        <!-- הוספת הקישור החדש עבור אביגיל -->
+        <a href="#" id="avigailOption" style="display: none;">לאביגיל בלבד</a>
     </div>
+
+    <div id="secretHeart" style="display: none; font-size: 100px;">❤️</div>
 
     <script src="background-images.js"></script>
     <script src="script.js"></script>
+    
+    <!-- הוספת הקוד לטיפול בקוד הסודי ולהפעלת הלבבות פעם אחת -->
+    <script>
+    let startTime = new Date();
+    let inputSequence = "";
+
+    document.addEventListener('keydown', function(event) {
+        let currentTime = new Date();
+        let timeDiff = (currentTime - startTime) / 1000;
+
+        if (timeDiff <= 60) { 
+            inputSequence += event.key;
+
+            if (inputSequence.includes("אביגיל")) {
+                // הצגת הסמל "❤️"
+                document.getElementById('secretHeart').style.display = 'block';
+
+                // הצגת האפשרות הסודית
+                document.getElementById('avigailOption').style.display = 'block';
+
+                // הסתרת הסמל אחרי כמה שניות
+                setTimeout(function() {
+                    document.getElementById('secretHeart').style.display = 'none';
+                }, 3000);
+
+                // הפעלת סקריפט הלבבות פעם אחת
+                createHearts();
+            }
+        }
+    });
+
+    function createHearts() {
+        for (let i = 0; i < 30; i++) {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.style.left = `${Math.random() * 100}vw`;
+            heart.style.top = `${Math.random() * 100}vh`;
+            heart.style.backgroundColor = 'red'; // צבע ברירת מחדל של הלבבות
+            document.body.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 5000); // הלבבות ייעלמו אחרי 5 שניות
+        }
+    }
+    </script>
 </body>
 </html>
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-      navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
-        console.log('Service Worker registered with scope:', registration.scope);
-      }, function(err) {
-        console.log('Service Worker registration failed:', err);
-      });
-    });
-  }
-</script>
