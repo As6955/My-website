@@ -177,7 +177,6 @@ document.addEventListener('keydown', (e) => {
     } else if (e.key === 'Enter') {
         changeBackgroundImage(1); // החלפת תמונה לתמונה הבאה בלחיצה על אנטר
     } else if (e.key === ' ') { // מקש רווח להתחלה/הפסקת החלפת תמונות אוטומטית
-        e.preventDefault(); // למנוע התנהגות ברירת מחדל של גלילה
         if (autoChangeInterval) {
             clearInterval(autoChangeInterval);
             autoChangeInterval = null;
@@ -188,3 +187,4 @@ document.addEventListener('keydown', (e) => {
         }
     }
 });
+
