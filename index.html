@@ -95,10 +95,10 @@
 
     <!-- תפריט חדש שנפתח לאחר הקלדת "אביגיל" -->
     <div class="dropdown-menu" id="secretMenu" style="display: none; position: fixed; top: 100px; right: 20px;">
-        <h3>ארי❤️אביגיל</h3>
-        <a href="#" id="openIdeaInput">אפשרות 1: כתיבת רעיון</a>
-        <a href="#">אפשרות 2</a>
-        <a href="#">אפשרות 3</a>
+        <h3>ארי-אביגיל</h3>
+        <a href="#" id="openIdeaInput">אפשרות סודית 1: כתיבת רעיון</a>
+        <a href="#">אפשרות סודית 2</a>
+        <a href="#">אפשרות סודית 3</a>
     </div>
 
     <div id="secretHeart" style="display: none; font-size: 100px;">❤️</div>
@@ -108,6 +108,53 @@
         <textarea id="ideaInput" placeholder="כתוב את הרעיון שלך כאן..."></textarea>
         <button id="submitIdea">שלח רעיון</button>
     </div>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-database.js"></script>
+    <script>
+      // הגדרות Firebase
+      const firebaseConfig = {
+        apiKey: "AIzaSyArRmykK3Vy_qhg811ZV8En3aNnEq9siFY",
+        authDomain: "my-website-wedding.firebaseapp.com",
+        projectId: "my-website-wedding",
+        storageBucket: "my-website-wedding.appspot.com",
+        messagingSenderId: "40275814976",
+        appId: "1:40275814976:web:a973218ec4072f21978da5"
+      };
+
+      // אתחול Firebase
+      const app = firebase.initializeApp(firebaseConfig);
+      const db = firebase.database();
+
+      // פונקציות לשמירה וטעינת נתונים
+      function saveIdea(idea) {
+          db.ref('ideas/').set({
+              text: idea
+          });
+      }
+
+      function loadIdea() {
+          db.ref('ideas/').get().then((snapshot) => {
+              if (snapshot.exists()) {
+                  document.getElementById('ideaInput').value = snapshot.val().text;
+              }
+          });
+      }
+
+      // קריאה לטעינת הרעיון כאשר הדף נטען
+      loadIdea();
+
+      document.getElementById('submitIdea').addEventListener('click', function() {
+          const idea = document.getElementById('ideaInput').value;
+          if (idea) {
+              saveIdea(idea);
+              alert(`הרעיון שלך נשמר: ${idea}`);
+          } else {
+              alert('אנא הזן רעיון לפני שליחתו.');
+          }
+      });
+    </script>
 
     <script src="background-images.js"></script>
     <script src="script.js"></script>
@@ -124,7 +171,7 @@
         if (timeDiff <= 60) { 
             inputSequence += event.key;
 
-            if (inputSequence.includes("אריגיל")) {
+            if (inputSequence.includes("אביגיל")) {
                 // הצגת הסמל "❤️"
                 document.getElementById('secretHeart').style.display = 'block';
 
@@ -173,20 +220,8 @@
         document.getElementById('ideaInputContainer').style.display = 'block';
     });
 
-    // שליחת הרעיון
-    document.getElementById('submitIdea').addEventListener('click', function() {
-        const idea = document.getElementById('ideaInput').value;
-        if (idea) {
-            alert(`הרעיון שלך נשלח: ${idea}`);
-            document.getElementById('ideaInputContainer').style.display = 'none';
-            document.getElementById('ideaInput').value = ''; // איפוס התיבה לאחר השליחה
-        } else {
-            alert('אנא הזן רעיון לפני שליחתו.');
-        }
-    });
-
     function createHearts() {
-        for (let i = 0; i < 20; i++) {
+        for (let i = 0; i < 30; i++) {
             const heart = document.createElement('div');
             heart.classList.add('heart');
             heart.style.left = `${Math.random() * 100}vw`;
