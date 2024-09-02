@@ -6,62 +6,112 @@
     <title>ספירה לאחור לחתונה❤️</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* אנימציה שמזמינה את המשתמש ללחוץ על התפריט */
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.2);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
+    #ideaInputContainer {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+        max-width: 400px;
+        background-color: #fff;
+        border-radius: 20px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        padding: 15px;
+        z-index: 1000;
+        font-family: 'Arial', sans-serif;
+    }
 
-        /* החלת האנימציה על סמל התפריט החדש */
-        #openSecretMenuIcon.pulsate {
-            animation: pulse 1s infinite;
-        }
+    #ideaInput {
+        width: calc(100% - 50px);
+        height: 40px;
+        padding: 10px 15px;
+        font-size: 16px;
+        border: none;
+        border-radius: 20px;
+        background-color: #f0f0f0;
+        margin-right: 10px;
+        transition: all 0.3s ease;
+        float: left;
+    }
 
-        /* עיצוב תיבת הקלט */
-        #ideaInputContainer {
-            display: none;
-            position: fixed;
-            top: 30vh;
-            left: 10vw;
-            width: 80vw;
-            background-color: rgba(0, 0, 0, 0.8);
-            z-index: 4;
-            padding: 20px;
-            border-radius: 10px;
-            color: white;
-        }
+    #ideaInput:focus {
+        outline: none;
+        background-color: #e6e6e6;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
 
-        #ideaInputContainer textarea {
-            width: 100%;
-            height: 100px;
-            padding: 10px;
-            font-size: 16px;
-            border-radius: 5px;
-            border: none;
-            margin-bottom: 20px;
-        }
+    #submitIdea {
+        width: 40px;
+        height: 40px;
+        background-color: #ff4081;
+        color: white;
+        font-size: 18px;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        float: right;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-        #ideaInputContainer button {
-            padding: 10px 20px;
-            background-color: #FFD700;
-            color: black;
-            font-size: 16px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+    #submitIdea:hover {
+        background-color: #e91e63;
+        transform: scale(1.1);
+    }
 
-        #ideaInputContainer button:hover {
-            background-color: #FFA500;
-        }
-    </style>
+    #submitIdea:active {
+        transform: scale(0.95);
+    }
+
+    #submitIdea::before {
+        content: '❤️';
+        font-size: 20px;
+    }
+
+    /* הוספת אנימציה לכניסת תיבת ההודעות */
+    @keyframes slideUp {
+        from { transform: translateY(100%) translateX(-50%); }
+        to { transform: translateY(0) translateX(-50%); }
+    }
+
+    #ideaInputContainer {
+        animation: slideUp 0.3s ease-out;
+    }
+
+    /* סגנון לבועת צ'אט מעל תיבת הקלט */
+    #chatBubble {
+        position: absolute;
+        bottom: 100%;
+        left: 20px;
+        background-color: #ff87b1;
+        color: white;
+        padding: 10px 15px;
+        border-radius: 18px;
+        font-size: 14px;
+        margin-bottom: 10px;
+        max-width: 70%;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    #chatBubble::after {
+        content: '';
+        position: absolute;
+        bottom: -6px;
+        left: 10px;
+        border-width: 6px 6px 0;
+        border-style: solid;
+        border-color: #ff87b1 transparent;
+    }
+</style>
+
+<div id="ideaInputContainer">
+    <div id="chatBubble">יש לך רעיון ? 💕</div>
+    <input type="text" id="ideaInput" placeholder="הקלידי כאן...">
+    <button id="submitIdea"></button>
+</div>
 </head>
 <body>
     <div class="overlay"></div>
@@ -190,10 +240,14 @@
                 document.getElementById('menu').style.display = 'none';
             });
 
-            // פתיחת התפריט החדש כאשר העכבר עובר על הסמל
+            // פתיחת תפריט סודי עם תיבת הרעיון מיידית
             document.getElementById('openSecretMenuIcon').addEventListener('mouseenter', function() {
                 const secretMenu = document.getElementById('secretMenu');
+                const ideaInputContainer = document.getElementById('ideaInputContainer');
+
                 secretMenu.style.display = 'block';
+                secretMenu.style.display = 'none'; // הסתרת התפריט הסודי לאחר פתיחת תיבת הרעיון
+                ideaInputContainer.style.display = 'block';
                 // הסרת האנימציה כשהתפריט נפתח
                 this.classList.remove('pulsate');
             });
@@ -203,9 +257,17 @@
                 document.getElementById('secretMenu').style.display = 'none';
             });
 
-            // פתיחת תיבת הקלט לרעיון
-            document.getElementById('openIdeaInput').addEventListener('click', function() {
-                document.getElementById('ideaInputContainer').style.display = 'block';
+            // סגירת תיבת הקלט לרעיון בלחיצה מחוץ לה
+            document.addEventListener('click', function(event) {
+                const ideaInputContainer = document.getElementById('ideaInputContainer');
+                if (!ideaInputContainer.contains(event.target) && event.target.id !== 'openIdeaInput') {
+                    ideaInputContainer.style.display = 'none';
+                }
+            });
+
+            // סגירת תיבת הקלט לרעיון
+            document.getElementById('submitIdea').addEventListener('click', function() {
+                document.getElementById('ideaInputContainer').style.display = 'none';
             });
 
             // שליחת הרעיון ל-Firebase
