@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+אם<!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -243,22 +243,30 @@
     loadGallery();
 
     // הפעלת מצב מסך מלא בעת טעינת הדף
-    function openFullscreenOnLoad() {
-        const elem = document.documentElement; // בוחר את הדף כולו
-        if (elem.requestFullscreen) {
-            elem.requestFullscreen();
-        } else if (elem.mozRequestFullScreen) { // עבור Firefox
-            elem.mozRequestFullScreen();
-        } else if (elem.webkitRequestFullscreen) { // עבור Chrome, Safari ו־Opera
-            elem.webkitRequestFullscreen();
-        } else if (elem.msRequestFullscreen) { // עבור IE/Edge
-            elem.msRequestFullscreen();
-        }
-    }
-
     document.addEventListener('DOMContentLoaded', function () {
-        openFullscreenOnLoad(); // הפעל מסך מלא כאשר הדף נטען
+    const elem = document.documentElement;
+    
+    // יצירת אירוע קליק מדומה
+    const clickEvent = new MouseEvent('click', {
+        view: window,
+        bubbles: true,
+        cancelable: true
     });
+
+    if (elem.requestFullscreen) {
+        elem.dispatchEvent(clickEvent); // מדמה לחיצה
+        elem.requestFullscreen();
+    } else if (elem.mozRequestFullScreen) {
+        elem.dispatchEvent(clickEvent); // עבור Firefox
+        elem.mozRequestFullScreen();
+    } else if (elem.webkitRequestFullscreen) {
+        elem.dispatchEvent(clickEvent); // עבור Chrome, Safari ו־Opera
+        elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) {
+        elem.dispatchEvent(clickEvent); // עבור IE/Edge
+        elem.msRequestFullscreen();
+    }
+});
 </script>
 
 </body>
