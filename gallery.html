@@ -193,42 +193,69 @@
         });
     }
 
-    function openFullscreen(imgSrc) {
-        const fullscreenDiv = document.createElement('div');
-        fullscreenDiv.classList.add('fullscreen');
-        fullscreenDiv.onclick = () => document.body.removeChild(fullscreenDiv);
+function openFullscreen(imgSrc) {
+    const fullscreenDiv = document.createElement('div');
+    fullscreenDiv.classList.add('fullscreen');
+    fullscreenDiv.onclick = () => document.body.removeChild(fullscreenDiv);
 
-        const img = document.createElement('img');
-        img.src = imgSrc;
+    const img = document.createElement('img');
+    img.src = imgSrc;
 
-        const optionsDiv = document.createElement('div');
-        optionsDiv.classList.add('fullscreen-options');
-        
-        const setBackgroundButton = document.createElement('button');
-        setBackgroundButton.textContent = 'קבע כרקע';
-        setBackgroundButton.onclick = (e) => {
-            e.stopPropagation();
-            localStorage.setItem('backgroundImage', imgSrc); // שמירת התמונה באחסון המקומי
-            alert('הרקע נקבע בהצלחה! חזור לדף הראשי כדי לראות את השינוי.');
-        };
-        
-        const downloadButton = document.createElement('button');
-        downloadButton.textContent = 'הורד תמונה';
-        downloadButton.onclick = (e) => {
-            e.stopPropagation();
-            const link = document.createElement('a');
-            link.href = imgSrc;
-            link.download = imgSrc.split('/').pop();
-            link.click();
-        };
+    const optionsDiv = document.createElement('div');
+    optionsDiv.classList.add('fullscreen-options');
 
-        optionsDiv.appendChild(setBackgroundButton);
-        optionsDiv.appendChild(downloadButton);
+    // כפתור קבע כרקע
+    const setBackgroundButton = document.createElement('button');
+    setBackgroundButton.textContent = 'קבע כרקע';
+    setBackgroundButton.onclick = (e) => {
+        e.stopPropagation();
+        localStorage.setItem('backgroundImage', imgSrc); // שמירת התמונה באחסון המקומי
+        alert('הרקע נקבע בהצלחה! חזור לדף הראשי כדי לראות את השינוי.');
+    };
 
-        fullscreenDiv.appendChild(img);
-        fullscreenDiv.appendChild(optionsDiv);
-        document.body.appendChild(fullscreenDiv);
-    }
+    // כפתור הורדת תמונה
+    const downloadButton = document.createElement('button');
+    downloadButton.textContent = 'הורד תמונה';
+    downloadButton.onclick = (e) => {
+        e.stopPropagation();
+        const link = document.createElement('a');
+        link.href = imgSrc;
+        link.download = imgSrc.split('/').pop();
+        link.click();
+    };
+
+    // כפתור שיתוף תמונה כקובץ
+    const shareButton = document.createElement('button');
+    shareButton.textContent = 'שתף תמונה';
+    shareButton.onclick = async (e) => {
+        e.stopPropagation();
+
+        // בקשת התמונה והמרה לקובץ
+        const response = await fetch(imgSrc);
+        const blob = await response.blob();
+        const file = new File([blob], 'shared-image.jpg', { type: blob.type });
+
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            navigator.share({
+                files: [file], // שיתוף הקובץ עצמו
+                title: 'תמונה מהגלריה',
+                text: 'תסתכל על התמונה הזו!'
+            }).catch((error) => console.log('שיתוף נכשל', error));
+        } else {
+            alert('שיתוף קבצים לא נתמך בדפדפן זה.');
+        }
+    };
+
+    // הוספת הכפתורים לאזור האפשרויות
+    optionsDiv.appendChild(setBackgroundButton);
+    optionsDiv.appendChild(downloadButton);
+    optionsDiv.appendChild(shareButton); // הוספת כפתור השיתוף
+
+    // הוספת התמונה והאפשרויות לחלון מסך מלא
+    fullscreenDiv.appendChild(img);
+    fullscreenDiv.appendChild(optionsDiv);
+    document.body.appendChild(fullscreenDiv);
+}
 
     function filterImages(query) {
         const filteredImages = images.filter(image => image.tags.includes(query));
