@@ -107,7 +107,7 @@
 <body>
 
 <div id="search-bar">
-    <input type="text" id="search-input" placeholder="חפש תמונות לפי תגיות...">
+    <input type="text" id="search-input" placeholder="מי הזוג היפה הזה...">
 </div>
 
 <section id="gallery" class="section">
@@ -121,6 +121,63 @@
         {src: '2.jpg', alt: 'תמונה 1', tags: 'נוף, טבע'},
         {src: '3.jpg', alt: 'תמונה 2', tags: 'משפחה, חברים'},
         {src: '4.jpg', alt: 'תמונה 3', tags: 'אירוע, חגיגה'},
+  {src: '3.jpg'},
+  {src: '4.jpg'},
+  {src: '5.jpg'},
+  {src: '6.jpg'},
+  {src: '7.jpg'},
+  {src: '8.jpg'},
+  {src: '9.jpg'},
+  {src: '10.jpg'},
+  {src: '11.jpg'},
+  {src: '12.jpg'},
+  {src: '13.jpg'},
+  {src: '14.jpg'},
+  {src: '15.jpg'},
+  {src: '16.jpg'},
+  {src: '17.jpg'},
+  {src: '18.jpg'},
+  {src: '19.jpg'},
+  {src: '20.jpg'},
+  {src: '21.jpg'},
+  {src: '22.jpg'},
+  {src: '23.jpg'},
+  {src: '24.jpg'},
+  {src: '25.jpg'},
+  {src: '26.jpg'},
+  {src: '27.jpg'},
+  {src: '28.jpg'},
+  {src: '29.jpg'},
+  {src: '30.jpg'},
+  {src: '31.jpg'},
+  {src: '32.jpg'},
+  {src: '33.jpg'},
+  {src: '34.jpg'},
+  {src: '35.jpg'},
+  {src: '36.jpg'},
+  {src: '37.jpg'},
+  {src: '38.jpg'},
+  {src: '39.jpg'},
+  {src: '40.jpg'},
+  {src: '41.jpg'},
+  {src: '42.jpg'},
+  {src: '43.jpg'},
+  {src: '44.jpg'},
+  {src: '45.jpg'},
+  {src: '46.jpg'},
+  {src: '47.jpg'},
+  {src: '48.jpg'},
+  {src: '49.jpg'},
+  {src: '50.jpg'},
+          {src: '51.jpg'},
+          {src: '52.jpg'},
+          {src: '53.jpg'},
+          {src: '54.jpg'},
+          {src: '55.jpg'},
+          {src: '56.jpg'},
+          {src: '57.jpg'},
+
+
         // Add more images with relevant tags
     ];
 
@@ -136,7 +193,7 @@
         });
     }
 
-    function openFullscreen(imgSrc) {
+function openFullscreen(imgSrc) {
     const fullscreenDiv = document.createElement('div');
     fullscreenDiv.classList.add('fullscreen');
     fullscreenDiv.onclick = () => document.body.removeChild(fullscreenDiv);
@@ -220,22 +277,30 @@
     loadGallery();
 
     // הפעלת מצב מסך מלא בעת טעינת הדף
-    function openFullscreenOnLoad() {
-        const elem = document.documentElement; // בוחר את הדף כולו
-        if (elem.requestFullscreen) {
-            elem.requestFullscreen();
-        } else if (elem.mozRequestFullScreen) { // עבור Firefox
-            elem.mozRequestFullScreen();
-        } else if (elem.webkitRequestFullscreen) { // עבור Chrome, Safari ו־Opera
-            elem.webkitRequestFullscreen();
-        } else if (elem.msRequestFullscreen) { // עבור IE/Edge
-            elem.msRequestFullscreen();
-        }
-    }
-
     document.addEventListener('DOMContentLoaded', function () {
-        openFullscreenOnLoad(); // הפעל מסך מלא כאשר הדף נטען
+    const elem = document.documentElement;
+    
+    // יצירת אירוע קליק מדומה
+    const clickEvent = new MouseEvent('click', {
+        view: window,
+        bubbles: true,
+        cancelable: true
     });
+
+    if (elem.requestFullscreen) {
+        elem.dispatchEvent(clickEvent); // מדמה לחיצה
+        elem.requestFullscreen();
+    } else if (elem.mozRequestFullScreen) {
+        elem.dispatchEvent(clickEvent); // עבור Firefox
+        elem.mozRequestFullScreen();
+    } else if (elem.webkitRequestFullscreen) {
+        elem.dispatchEvent(clickEvent); // עבור Chrome, Safari ו־Opera
+        elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) {
+        elem.dispatchEvent(clickEvent); // עבור IE/Edge
+        elem.msRequestFullscreen();
+    }
+});
 </script>
 
 </body>
