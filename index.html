@@ -1,3 +1,13 @@
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const savedBackground = localStorage.getItem('backgroundImage');
+        if (savedBackground) {
+            document.body.style.backgroundImage = `url(${savedBackground})`;
+            document.body.style.backgroundSize = 'cover';
+            document.body.style.backgroundPosition = 'center';
+        }
+    });
+</script>
 <!DOCTYPE html>
 <html lang="he">
 <head>
@@ -16,7 +26,7 @@
         max-width: 400px;
         background-color: #fff;
         border-radius: 20px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.0);
         padding: 15px;
         z-index: 1000;
         font-family: 'Arial', sans-serif;
@@ -108,7 +118,8 @@
     <!-- תפריט מקורי -->
     <div class="dropdown-menu" id="menu" style="display: none;">
         <a href="#" id="toggleDisplayMode">החלף תצוגה לימים בלבד</a>
-        <a href="#" id="toggleAutoChange">התחל/הפסק החלפת תמונות אוטומטית</a>
+      <a href="gallery.html">גלריה</a>
+          <a href="#" id="toggleAutoChange">התחל/הפסק החלפת תמונות אוטומטית</a>
         <a href="#" id="changeBrightness">בחר רמת בהירות</a>
         <a href="#" id="toggleMouseHearts">הפעל לבבות של העכבר</a>
         <a href="#" id="changeFont">החלף פונט</a>
@@ -290,4 +301,5 @@
     <script src="background-images.js"></script>
     <script src="service-worker.js"></script>
 </body>
+</section>
 </html>
