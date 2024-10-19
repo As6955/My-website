@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>גלריה</title>
+    <title>גלריה משופרת</title>
     <style>
         /* Modern grid layout and styles for the gallery */
         body, html {
@@ -13,6 +13,12 @@
             font-family: 'Heebo', Arial, sans-serif;
             background-color: #f0f0f0;
             color: #333;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body.dark-mode {
+            background-color: #222;
+            color: #f0f0f0;
         }
 
         #gallery-content {
@@ -45,38 +51,15 @@
             height: 100%;
             background-color: rgba(0, 0, 0, 0.85);
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 1002;
         }
 
         .fullscreen img {
-            max-width: 90%;
-            max-height: 80%;
+            max-width: 100%;
+            max-height: 100%;
             border-radius: 10px;
-        }
-
-        .fullscreen-options {
-            margin-top: 15px;
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-        }
-
-        .fullscreen-options button {
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #333;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
-
-        .fullscreen-options button:hover {
-            background-color: #555;
         }
 
         #search-bar {
@@ -95,19 +78,23 @@
             outline: none;
         }
 
-        /* Ensure background is fully covering and positioned correctly */
-        body.set-background {
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
+        /* תצוגת רשימה */
+        .list-view #gallery-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
+        .list-view #gallery-content img {
+            width: 90%;
+            height: auto;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
-
-<div id="search-bar">
-    <input type="text" id="search-input" placeholder="מי הזוג היפה הזה...😉">
+    <div id="search-bar">
+     <input type="text" id="search-input" placeholder="מי הזוג היפה הזה...😉">
 </div>
 
 <section id="gallery" class="section">
@@ -181,127 +168,59 @@
         // Add more images with relevant tags
     ];
 
-    function loadGallery() {
-        const gallery = document.getElementById('gallery-content');
-        gallery.innerHTML = '';  // Clear existing images
-        images.forEach(image => {
-            const img = document.createElement('img');
-            img.src = image.src;
-            img.alt = image.alt;
-            img.onclick = () => openFullscreen(image.src);
-            gallery.appendChild(img);
-        });
-    }
-
-function openFullscreen(imgSrc) {
-    const fullscreenDiv = document.createElement('div');
-    fullscreenDiv.classList.add('fullscreen');
-    fullscreenDiv.onclick = () => document.body.removeChild(fullscreenDiv);
-
-    const img = document.createElement('img');
-    img.src = imgSrc;
-
-    const optionsDiv = document.createElement('div');
-    optionsDiv.classList.add('fullscreen-options');
-
-    // כפתור קבע כרקע
-    const setBackgroundButton = document.createElement('button');
-    setBackgroundButton.textContent = 'קבע כרקע';
-    setBackgroundButton.onclick = (e) => {
-        e.stopPropagation();
-        localStorage.setItem('backgroundImage', imgSrc); // שמירת התמונה באחסון המקומי
-        alert('הרקע נקבע בהצלחה! חזור לדף הראשי כדי לראות את השינוי.');
-    };
-
-    // כפתור הורדת תמונה
-    const downloadButton = document.createElement('button');
-    downloadButton.textContent = 'הורד תמונה';
-    downloadButton.onclick = (e) => {
-        e.stopPropagation();
-        const link = document.createElement('a');
-        link.href = imgSrc;
-        link.download = imgSrc.split('/').pop();
-        link.click();
-    };
-
-    // כפתור שיתוף תמונה כקובץ
-    const shareButton = document.createElement('button');
-    shareButton.textContent = 'שתף תמונה';
-    shareButton.onclick = async (e) => {
-        e.stopPropagation();
-
-        // בקשת התמונה והמרה לקובץ
-        const response = await fetch(imgSrc);
-        const blob = await response.blob();
-        const file = new File([blob], 'shared-image.jpg', { type: blob.type });
-
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
-            navigator.share({
-                files: [file], // שיתוף הקובץ עצמו
-                title: 'תמונה מהגלריה',
-                text: 'תסתכל על התמונה הזו!'
-            }).catch((error) => console.log('שיתוף נכשל', error));
-        } else {
-            alert('שיתוף קבצים לא נתמך בדפדפן זה.');
+        function loadGallery() {
+            const gallery = document.getElementById('gallery-content');
+            gallery.innerHTML = '';  // ניקוי תמונות קיימות
+            images.forEach(image => {
+                const img = document.createElement('img');
+                img.src = image.src;
+                img.alt = image.alt;
+                img.loading = 'lazy';  // טעינה הדרגתית
+                img.onclick = () => openFullscreen(image);
+                gallery.appendChild(img);
+            });
         }
-    };
 
-    // הוספת הכפתורים לאזור האפשרויות
-    optionsDiv.appendChild(setBackgroundButton);
-    optionsDiv.appendChild(downloadButton);
-    optionsDiv.appendChild(shareButton); // הוספת כפתור השיתוף
+        function openFullscreen(image) {
+            const fullscreenDiv = document.createElement('div');
+            fullscreenDiv.classList.add('fullscreen');
+            fullscreenDiv.onclick = () => document.body.removeChild(fullscreenDiv);
 
-    // הוספת התמונה והאפשרויות לחלון מסך מלא
-    fullscreenDiv.appendChild(img);
-    fullscreenDiv.appendChild(optionsDiv);
-    document.body.appendChild(fullscreenDiv);
-}
-
-    function filterImages(query) {
-        const filteredImages = images.filter(image => image.tags.includes(query));
-        const gallery = document.getElementById('gallery-content');
-        gallery.innerHTML = '';  // Clear gallery
-        filteredImages.forEach(image => {
             const img = document.createElement('img');
             img.src = image.src;
             img.alt = image.alt;
-            img.onclick = () => openFullscreen(image.src);
-            gallery.appendChild(img);
+
+            fullscreenDiv.appendChild(img);
+            document.body.appendChild(fullscreenDiv);
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+
+        function toggleDisplayMode() {
+            document.body.classList.toggle('list-view');
+        }
+
+        // תמיכה במקלדת
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                // Toggle fullscreen
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen();
+                } else {
+                    document.exitFullscreen();
+                }
+            } else if (e.code === 'Digit1') {
+                toggleDisplayMode();
+            } else if (e.code === 'Digit2') {
+                toggleDarkMode();
+            }
         });
-    }
 
-    document.getElementById('search-input').addEventListener('input', (e) => {
-        filterImages(e.target.value);
-    });
-
-    loadGallery();
-
-    // הפעלת מצב מסך מלא בעת טעינת הדף
-    document.addEventListener('DOMContentLoaded', function () {
-    const elem = document.documentElement;
-    
-    // יצירת אירוע קליק מדומה
-    const clickEvent = new MouseEvent('click', {
-        view: window,
-        bubbles: true,
-        cancelable: true
-    });
-
-    if (elem.requestFullscreen) {
-        elem.dispatchEvent(clickEvent); // מדמה לחיצה
-        elem.requestFullscreen();
-    } else if (elem.mozRequestFullScreen) {
-        elem.dispatchEvent(clickEvent); // עבור Firefox
-        elem.mozRequestFullScreen();
-    } else if (elem.webkitRequestFullscreen) {
-        elem.dispatchEvent(clickEvent); // עבור Chrome, Safari ו־Opera
-        elem.webkitRequestFullscreen();
-    } else if (elem.msRequestFullscreen) {
-        elem.dispatchEvent(clickEvent); // עבור IE/Edge
-        elem.msRequestFullscreen();
-    }
-});
-</script>
-
+        // אתחול הגלריה
+        loadGallery();
+    </script>
 </body>
 </html>
