@@ -1,68 +1,105 @@
 <!DOCTYPE html>
-<html lang="he">
+<html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>דף מאוחד עם גלילה חלקה</title>
+    <title>דף מאוחד עם גלילה חלקה וניווט מקלדת</title>
     <style>
         body, html {
             margin: 0;
             padding: 0;
             height: 100%;
             overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+        .container {
+            height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
         }
         .iframe-container {
-            height: 100vh; /* כל דף ימלא את גובה המסך כולו */
+            height: 100vh;
             width: 100%;
+            scroll-snap-align: start;
         }
         iframe {
             width: 100%;
             height: 100%;
             border: none;
         }
-        /* הסרת רווחים בגלילה */
-        ::-webkit-scrollbar {
-            display: none;
-        }
     </style>
 </head>
 <body>
-    <div class="iframe-container">
-        <iframe src="page1.html"></iframe> <!-- הדף הראשון ימלא את המסך -->
+    <div class="container">
+        <div class="iframe-container">
+            <iframe src="page1.html"></iframe>
+        </div>
+        <div class="iframe-container">
+            <iframe src="page2.html"></iframe>
+        </div>
     </div>
-    <div class="iframe-container">
-        <iframe src="page2.html"></iframe> <!-- הדף השני ימלא את המסך -->
-    </div>
-
     <script>
-        let currentSection = 0; // משתנה שיעקוב אחר המיקום הנוכחי
-        const sections = document.querySelectorAll('.iframe-container'); // כל הסקשנים
-        const totalSections = sections.length; // מספר הסקשנים
-        const sectionHeight = window.innerHeight; // גובה כל מסך
+        const container = document.querySelector('.container');
+        const sections = document.querySelectorAll('.iframe-container');
+        let currentSection = 0;
+        const totalSections = sections.length;
+
+        function scrollToSection(index) {
+            currentSection = Math.max(0, Math.min(index, totalSections - 1));
+            sections[currentSection].scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function handleScroll(direction) {
+            scrollToSection(currentSection + direction);
+        }
 
         // מאזין לאירוע גלילה
-        window.addEventListener('wheel', function(event) {
-            if (event.deltaY > 0) {
-                // גלילה למטה
-                currentSection = Math.min(currentSection + 1, totalSections - 1); // קפיצה למסך הבא, ללא גלילה מעבר למסך האחרון
-            } else {
-                // גלילה למעלה
-                currentSection = Math.max(currentSection - 1, 0); // קפיצה למסך הקודם, ללא גלילה מעבר למסך הראשון
-            }
+        container.addEventListener('wheel', function(event) {
+            event.preventDefault();
+            handleScroll(event.deltaY > 0 ? 1 : -1);
+        }, { passive: false });
 
-            // גלילה חלקה למסך המתאים
-            window.scrollTo({
-                top: currentSection * sectionHeight,
-                behavior: 'smooth' // גלילה חלקה
-            });
+        // מאזין לאירועי מקשי חצים
+        document.addEventListener('keydown', function(event) {
+            switch(event.key) {
+                case 'ArrowDown':
+                case 'ArrowRight':
+                    event.preventDefault();
+                    handleScroll(1);
+                    break;
+                case 'ArrowUp':
+                case 'ArrowLeft':
+                    event.preventDefault();
+                    handleScroll(-1);
+                    break;
+            }
         });
 
-        // עדכון גובה הסקשנים במקרה של שינוי גודל חלון הדפדפן
+        // מאזין לאירועי מגע (עבור מכשירים ניידים)
+        let touchStartY = 0;
+        container.addEventListener('touchstart', function(event) {
+            touchStartY = event.touches[0].clientY;
+        }, { passive: true });
+
+        container.addEventListener('touchend', function(event) {
+            const touchEndY = event.changedTouches[0].clientY;
+            const diff = touchStartY - touchEndY;
+            if (Math.abs(diff) > 50) { // סף מינימלי לזיהוי החלקה
+                handleScroll(diff > 0 ? 1 : -1);
+            }
+        }, { passive: true });
+
+        // עדכון מיקום הגלילה בעת שינוי גודל חלון
         window.addEventListener('resize', function() {
-            window.scrollTo({
-                top: currentSection * window.innerHeight,
-                behavior: 'smooth'
-            });
+            scrollToSection(currentSection);
+        });
+
+        // מעקב אחר שינויים בגלילה
+        container.addEventListener('scroll', function() {
+            const newSection = Math.round(container.scrollTop / container.clientHeight);
+            if (newSection !== currentSection) {
+                currentSection = newSection;
+            }
         });
     </script>
 </body>
