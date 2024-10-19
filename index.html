@@ -1,305 +1,69 @@
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const savedBackground = localStorage.getItem('backgroundImage');
-        if (savedBackground) {
-            document.body.style.backgroundImage = `url(${savedBackground})`;
-            document.body.style.backgroundSize = 'cover';
-            document.body.style.backgroundPosition = 'center';
-        }
-    });
-</script>
 <!DOCTYPE html>
 <html lang="he">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ספירה לאחור לחתונה❤️</title>
-    <link rel="stylesheet" href="style.css">
+    <title>דף מאוחד עם גלילה חלקה</title>
     <style>
-    #ideaInputContainer {
-        display: none;
-        position: fixed;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 90%;
-        max-width: 400px;
-        background-color: #fff;
-        border-radius: 20px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.0);
-        padding: 15px;
-        z-index: 1000;
-        font-family: 'Arial', sans-serif;
-    }
-
-    #ideaInput {
-        width: calc(100% - 50px);
-        height: 40px;
-        padding: 10px 15px;
-        font-size: 16px;
-        border: none;
-        border-radius: 20px;
-        background-color: #f0f0f0;
-        margin-right: 10px;
-        transition: all 0.3s ease;
-        float: left;
-    }
-
-    #ideaInput:focus {
-        outline: none;
-        background-color: #e6e6e6;
-        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
-
-    #submitIdea {
-        width: 40px;
-        height: 40px;
-        background-color: #ff4081;
-        color: white;
-        font-size: 18px;
-        border: none;
-        border-radius: 50%;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        float: right;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    #submitIdea:hover {
-        background-color: #e91e63;
-        transform: scale(1.1);
-    }
-
-    #submitIdea:active {
-        transform: scale(0.95);
-    }
-
-    #submitIdea::before {
-        content: '❤️';
-        font-size: 20px;
-    }
-
-    /* הוספת אנימציה לכניסת תיבת ההודעות */
-    @keyframes slideUp {
-        from { transform: translateY(100%) translateX(-50%); }
-        to { transform: translateY(0) translateX(-50%); }
-    }
-
-    #ideaInputContainer {
-        animation: slideUp 0.3s ease-out;
-    }
-
-    /* סגנון לבועת צ'אט מעל תיבת הקלט */
-  
-</style>
-
-<div id="ideaInputContainer">
-    <div id="chatBubble">יש לך רעיון ?</div>
-    <input type="text" id="ideaInput" placeholder="הקלידי כאן...">
-    <button id="submitIdea"></button>
-</div>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow-x: hidden;
+        }
+        .iframe-container {
+            height: 100vh; /* כל דף ימלא את גובה המסך כולו */
+            width: 100%;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        /* הסרת רווחים בגלילה */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-    <div class="overlay"></div>
-    <h1>החתונה בעוד...!!!</h1>
-    <div id="timer">
-        <span id="weeks" class="time-part"></span>
-        <span id="days" class="time-part"></span>
-        <span id="hours" class="time-part"></span>
-        <span id="minutes" class="time-part"></span>
-        <span id="seconds" class="time-part"></span>
+    <div class="iframe-container">
+        <iframe src="page1.html"></iframe> <!-- הדף הראשון ימלא את המסך -->
+    </div>
+    <div class="iframe-container">
+        <iframe src="page2.html"></iframe> <!-- הדף השני ימלא את המסך -->
     </div>
 
-    <!-- סמל תפריט מקורי בצורה של ☰ -->
-    <div id="openMenuIcon">☰</div>
+    <script>
+        let currentSection = 0; // משתנה שיעקוב אחר המיקום הנוכחי
+        const sections = document.querySelectorAll('.iframe-container'); // כל הסקשנים
+        const totalSections = sections.length; // מספר הסקשנים
+        const sectionHeight = window.innerHeight; // גובה כל מסך
 
-    <!-- תפריט מקורי -->
-    <div class="dropdown-menu" id="menu" style="display: none;">
-        <a href="#" id="toggleDisplayMode">החלף תצוגה לימים בלבד</a>
-      <a href="gallery.html">גלריה</a>
-          <a href="#" id="toggleAutoChange">התחל/הפסק החלפת תמונות אוטומטית</a>
-        <a href="#" id="changeBrightness">בחר רמת בהירות</a>
-        <a href="#" id="toggleMouseHearts">הפעל לבבות של העכבר</a>
-        <a href="#" id="changeFont">החלף פונט</a>
-        <a href="#" id="heartSettings">הגדרות לבבות</a>
-        <a href="#" id="toggleFullScreen">מסך מלא</a>
-        <a href="#" id="uploadBackground">העלה תמונת רקע</a>
-        <a href="mailto:a0527121640@gmail.com?subject=משוב&body=שלום, אשמח לשלוח משוב.">צור קשר</a>
-    </div>
-
-    <!-- סמל תפריט חדש בצורה של ❤️ -->
-    <div id="openSecretMenuIcon" style="display: none; position: fixed; top: 60px; right: 20px; cursor: pointer; font-size: 40px; z-index: 3;">❤️</div>
-
-    <!-- תפריט חדש שנפתח לאחר הקלדת "אביגיל" -->
-    <div class="dropdown-menu" id="secretMenu" style="display: none; position: fixed; top: 100px; right: 20px;">
-        <h3>ארי❤️אביגיל</h3>
-        <a href="#" id="openIdeaInput">אפשרות סודית 1: כתיבת רעיון</a>
-        <a href="#">אפשרות סודית 2</a>
-        <a href="#">אפשרות סודית 3</a>
-    </div>
-
-    <div id="secretHeart" style="display: none; font-size: 100px;">❤️</div>
-
-    <!-- תיבת קלט לרעיון -->
-    <div id="ideaInputContainer">
-        <textarea id="ideaInput" placeholder="כתוב את הרעיון שלך כאן..."></textarea>
-        <button id="submitIdea">שלח רעיון</button>
-    </div>
-
-    <!-- סקריפטים -->
-    <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
-        import { getDatabase, ref, set, push, onValue } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js";
-
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyArRmykK3Vy_qhg811ZV8En3aNnEq9siFY",
-            authDomain: "my-website-wedding.firebaseapp.com",
-            databaseURL: "https://my-website-wedding-default-rtdb.firebaseio.com",
-            projectId: "my-website-wedding",
-            storageBucket: "my-website-wedding.appspot.com",
-            messagingSenderId: "40275814976",
-            appId: "1:40275814976:web:a973218ec4072f21978da5"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const database = getDatabase(app);
-
-        document.addEventListener('DOMContentLoaded', function () { 
-            let startTime = new Date();
-            let inputSequence = "";
-
-            // הפונקציה שמביאה את הרעיון האחרון ומציגה אותו בתיבת הטקסט
-            function loadLastIdea() {
-                const lastIdeaRef = ref(database, 'ideas');
-                onValue(lastIdeaRef, (snapshot) => {
-                    let lastIdea = '';
-                    snapshot.forEach((childSnapshot) => {
-                        lastIdea = childSnapshot.val().idea;
-                    });
-
-                    if (lastIdea) {
-                        document.getElementById('ideaInput').value = lastIdea;
-                    }
-                });
+        // מאזין לאירוע גלילה
+        window.addEventListener('wheel', function(event) {
+            if (event.deltaY > 0) {
+                // גלילה למטה
+                currentSection = Math.min(currentSection + 1, totalSections - 1); // קפיצה למסך הבא, ללא גלילה מעבר למסך האחרון
+            } else {
+                // גלילה למעלה
+                currentSection = Math.max(currentSection - 1, 0); // קפיצה למסך הקודם, ללא גלילה מעבר למסך הראשון
             }
 
-            // קריאה לפונקציה שמביאה את הרעיון האחרון בעת טעינת הדף
-            loadLastIdea();
-
-            document.addEventListener('keydown', function(event) {
-                let currentTime = new Date();
-                let timeDiff = (currentTime - startTime) / 1000;
-
-                if (timeDiff <= 60) { 
-                    inputSequence += event.key;
-
-                    if (inputSequence.includes("אריגיל")) {
-                        // הצגת הסמל "❤️"
-                        document.getElementById('secretHeart').style.display = 'block';
-
-                        // הצגת סמל התפריט החדש עם אנימציה
-                        const secretMenuIcon = document.getElementById('openSecretMenuIcon');
-                        secretMenuIcon.style.display = 'block';
-                        secretMenuIcon.classList.add('pulsate');
-
-                        // הסתרת הסמל אחרי כמה שניות
-                        setTimeout(function() {
-                            document.getElementById('secretHeart').style.display = 'none';
-                        }, 3000);
-
-                        // הפעלת סקריפט הלבבות פעם אחת
-                        createHearts();
-                    }
-                }
+            // גלילה חלקה למסך המתאים
+            window.scrollTo({
+                top: currentSection * sectionHeight,
+                behavior: 'smooth' // גלילה חלקה
             });
+        });
 
-            // פתיחת התפריט המקורי כאשר העכבר עובר על הסמל
-            document.getElementById('openMenuIcon').addEventListener('mouseenter', function() {
-                const menu = document.getElementById('menu');
-                menu.style.display = 'block';
+        // עדכון גובה הסקשנים במקרה של שינוי גודל חלון הדפדפן
+        window.addEventListener('resize', function() {
+            window.scrollTo({
+                top: currentSection * window.innerHeight,
+                behavior: 'smooth'
             });
-
-            // סגירת התפריט המקורי כאשר העכבר יוצא מגבולות התפריט
-            document.getElementById('menu').addEventListener('mouseleave', function() {
-                document.getElementById('menu').style.display = 'none';
-            });
-
-            // פתיחת תפריט סודי עם תיבת הרעיון מיידית
-            document.getElementById('openSecretMenuIcon').addEventListener('mouseenter', function() {
-                const secretMenu = document.getElementById('secretMenu');
-                const ideaInputContainer = document.getElementById('ideaInputContainer');
-
-                secretMenu.style.display = 'block';
-                secretMenu.style.display = 'none'; // הסתרת התפריט הסודי לאחר פתיחת תיבת הרעיון
-                ideaInputContainer.style.display = 'block';
-                // הסרת האנימציה כשהתפריט נפתח
-                this.classList.remove('pulsate');
-            });
-
-            // סגירת התפריט החדש כאשר העכבר יוצא מגבולות התפריט
-            document.getElementById('secretMenu').addEventListener('mouseleave', function() {
-                document.getElementById('secretMenu').style.display = 'none';
-            });
-
-            // סגירת תיבת הקלט לרעיון בלחיצה מחוץ לה
-            document.addEventListener('click', function(event) {
-                const ideaInputContainer = document.getElementById('ideaInputContainer');
-                if (!ideaInputContainer.contains(event.target) && event.target.id !== 'openIdeaInput') {
-                    ideaInputContainer.style.display = 'none';
-                }
-            });
-
-            // סגירת תיבת הקלט לרעיון
-            document.getElementById('submitIdea').addEventListener('click', function() {
-                document.getElementById('ideaInputContainer').style.display = 'none';
-            });
-
-            // שליחת הרעיון ל-Firebase
-            document.getElementById('submitIdea').addEventListener('click', function() {
-                const idea = document.getElementById('ideaInput').value;
-                if (idea) {
-                    // כתיבת הרעיון ל-Firebase
-                    const ideasRef = ref(database, 'ideas');
-                    const newIdeaRef = push(ideasRef);
-                    set(newIdeaRef, {
-                        idea: idea,
-                        timestamp: new Date().toISOString()
-                    }).then(() => {
-                        alert(`הרעיון שלך נשלח: ${idea}`);
-                        document.getElementById('ideaInputContainer').style.display = 'none';
-                 
-                    }).catch((error) => {
-                        alert('שגיאה בשליחת הרעיון: ' + error.message);
-                    });
-                } else {
-                    alert('אנא הזן רעיון לפני שליחתו.');
-                }
-            });
-
-            function createHearts() {
-                for (let i = 0; i < 30; i++) {
-                    const heart = document.createElement('div');
-                    heart.classList.add('heart');
-                    heart.style.left = `${Math.random() * 100}vw`;
-                    heart.style.top = `${Math.random() * 100}vh`;
-                    heart.style.backgroundColor = 'red'; // צבע ברירת מחדל של הלבבות
-                    document.body.appendChild(heart);
-
-                    setTimeout(() => {
-                        heart.remove();
-                    }, 5000); // הלבבות ייעלמו אחרי 5 שניות
-                }
-            }
         });
     </script>
-    <script src="script.js"></script>
-    <script src="background-images.js"></script>
-    <script src="service-worker.js"></script>
 </body>
-</section>
 </html>
