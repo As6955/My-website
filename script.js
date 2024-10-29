@@ -1,5 +1,5 @@
-const targetDate = new Date(2024, 10, 6, 0, 0, 0); // November 6, 2024
-let displayMode = "weeksDays";
+const targetDate = new Date(2024, 10, 6, 19, 0, 0); // November 6, 2024
+let displayMode = "days";
 let autoChangeInterval;
 let mouseHeartsEnabled = false;
 let currentHeartColor = 'red';
