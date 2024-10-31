@@ -24,6 +24,26 @@
         ::-webkit-scrollbar {
             display: none;
         }
+        /* עיצוב האייקון */
+        #music-toggle {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            z-index: 10;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: opacity 0.3s;
+        }
+        #music-toggle:hover {
+            opacity: 1;
+        }
+        #music-toggle img {
+            width: 30px;
+            height: 30px;
+        }
     </style>
 </head>
 <body>
@@ -34,46 +54,30 @@
         <iframe src="gallery.html"></iframe> <!-- הדף השני ימלא את המסך -->
     </div>
 
+    <!-- אלמנט המוזיקה -->
+    <audio id="background-music" src="שיר.mp3"></audio>
+
+    <!-- כפתור הפעלה/עצירה עם אייקון בלבד -->
+    <button id="music-toggle">
+        <img id="music-icon" src="play-button.png" alt="אייקון מוזיקה">
+    </button>
+
+    <!-- סקריפט להפעלת ועצירת המוזיקה -->
     <script>
-        let currentSection = 0; // משתנה שיעקוב אחר המיקום הנוכחי
-        const sections = document.querySelectorAll('.iframe-container'); // כל הסקשנים
-        const totalSections = sections.length; // מספר הסקשנים
-        const sectionHeight = window.innerHeight; // גובה כל מסך
+        document.addEventListener('DOMContentLoaded', function() {
+            const music = document.getElementById('background-music');
+            const musicIcon = document.getElementById('music-icon');
 
-        // מאזין לאירוע גלילה
-        window.addEventListener('wheel', function(event) {
-            if (event.deltaY > 0) {
-                // גלילה למטה
-                currentSection = Math.min(currentSection + 1, totalSections - 1); // קפיצה למסך הבא, ללא גלילה מעבר למסך האחרון
-            } else {
-                // גלילה למעלה
-                currentSection = Math.max(currentSection - 1, 0); // קפיצה למסך הקודם, ללא גלילה מעבר למסך הראשון
-            }
-
-            // גלילה חלקה למסך המתאים
-            window.scrollTo({
-                top: currentSection * sectionHeight,
-                behavior: 'smooth' // גלילה חלקה
+            document.getElementById('music-toggle').addEventListener('click', function() {
+                if (music.paused) {
+                    music.play();
+                    musicIcon.src = "pause-button.png"; // החלף לאייקון עצירה
+                } else {
+                    music.pause();
+                    musicIcon.src = "play-button.png"; // החלף לאייקון הפעלה
+                }
             });
         });
-
-        // עדכון גובה הסקשנים במקרה של שינוי גודל חלון הדפדפן
-        window.addEventListener('resize', function() {
-            window.scrollTo({
-                top: currentSection * window.innerHeight,
-                behavior: 'smooth'
-            });
-        });
-        window.addEventListener('scroll', function() {
-    const iframes = document.querySelectorAll('iframe');
-    iframes.forEach(function(iframe) {
-        const rect = iframe.getBoundingClientRect();
-        // בדיקה האם ה-iframe נמצא במרכז המסך
-        if (rect.top >= 0 && rect.bottom <= window.innerHeight) {
-            iframe.contentWindow.focus(); // העברת מיקוד ל-iframe הנוכחי
-        }
-    });
-});
     </script>
 </body>
 </html>
